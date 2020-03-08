@@ -5,6 +5,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , mMovie(QString("C:/Users/skobz/Development/QtPractice/SILClient/icons/ajax-loader.gif"))
 {
     ui->setupUi(this);
     this->ui->btnStart->setIcon(QIcon("start.png"));
@@ -13,6 +14,9 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->btnStart->setStyleSheet("QPushButton {border-style: outset; border-width: 0px;}");
     //this->ui->btnStart->setStyleSheet(buttonStyle);
 
+    //QLabel
+    mMovie.setScaledSize(this->ui->LoadAnimation->size());
+    this->ui->LoadAnimation->setMovie(&mMovie);
 
 }
 
@@ -32,5 +36,5 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_Run_clicked()
 {
-
+    mMovie.start();
 }
