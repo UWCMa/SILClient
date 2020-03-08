@@ -5,7 +5,10 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , mMovie(QString("C:/Users/skobz/Development/QtPractice/SILClient/icons/ajax-loader.gif"))
+    , mMovieLoad(QString("C:/Users/skobz/Development/QtPractice/SILClient/icons/ajax-loader.gif"))
+    , mMovieInitS(QString("C:/Users/skobz/Development/QtPractice/SILClient/icons/success.png"))
+    , mInitFailed(QString("C:/Users/skobz/Development/QtPractice/SILClient/icons/failed.png"))
+    , mMovieShutdown(QString("C:/Users/skobz/Development/QtPractice/SILClient/icons/off_1.png"))
 {
     ui->setupUi(this);
     this->ui->btnStart->setIcon(QIcon("start.png"));
@@ -15,9 +18,13 @@ MainWindow::MainWindow(QWidget *parent)
     //this->ui->btnStart->setStyleSheet(buttonStyle);
 
     //QLabel
-    mMovie.setScaledSize(this->ui->LoadAnimation->size());
-    this->ui->LoadAnimation->setMovie(&mMovie);
-
+    mMovieLoad.setScaledSize(this->ui->LoadAnimation->size());
+    mMovieInitS.setScaledSize(this->ui->LoadAnimation->size());
+    mInitFailed.setScaledSize(this->ui->LoadAnimation->size());
+    mMovieShutdown.setScaledSize(this->ui->LoadAnimation->size());
+    this->ui->LoadAnimation->setMovie(&mMovieLoad);
+    this->ui->InitSuccess->setMovie(&mMovieInitS);
+    this->ui->Shutdown->setMovie(&mMovieShutdown);
 }
 
 MainWindow::~MainWindow()
@@ -36,5 +43,15 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_Run_clicked()
 {
-    mMovie.start();
+    mMovieLoad.start();
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    mMovieInitS.start();
+}
+
+void MainWindow::on_pushButton_4_clicked()
+{
+    mMovieShutdown.start();
 }

@@ -21,8 +21,15 @@ private slots:
 
     void on_Run_clicked();
 
+    void on_pushButton_clicked();
+
+    void on_pushButton_4_clicked();
+
 private:
     Ui::MainWindow *ui;
-    QMovie mMovie;
+    QMovie  mMovieLoad;
+    QMovie  mMovieInitS;
+    QMovie  mInitFailed;
+    QMovie  mMovieShutdown;
 };
 #endif // MAINWINDOW_H
