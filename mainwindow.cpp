@@ -2,14 +2,47 @@
 #include "ui_mainwindow.h"
 #include <QMovie>
 
+#include <QtGlobal>
+#include "logbrowser.h"
+#include <qapplication.h>
+
+#include "tracesarea.h"
+
+void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+  {
+      QByteArray localMsg = msg.toLocal8Bit();
+      const char *file = context.file ? context.file : "";
+      const char *function = context.function ? context.function : "";
+      switch (type) {
+      case QtDebugMsg:
+          fprintf(stderr, "Debug: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
+          break;
+      case QtInfoMsg:
+          fprintf(stderr, "Info: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
+          break;
+      case QtWarningMsg:
+          fprintf(stderr, "Warning: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
+          break;
+      case QtCriticalMsg:
+          fprintf(stderr, "Critical: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
+          break;
+      case QtFatalMsg:
+          fprintf(stderr, "Fatal: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
+          break;
+
+          ////////////////////
+
+      }
+  }
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , mMovieLoad(QString("C:/Users/skobz/Development/QtPractice/SILClient/icons/ajax-loader.gif"))
-    , mMovieInitS(QString("success.png"))
-    //, mMovieInitS(QString("C:/Users/skobz/Development/QtPractice/SILClient/icons/success.png"))
-    //, mInitFailed(QString("C:/Users/skobz/Development/QtPractice/SILClient/icons/failed.png"))
-    , mMovieShutdown(QString("C:/Users/skobz/Development/QtPractice/SILClient/icons/off_1.png"))
+    , mMovieLoad(QString(":/icons/ajax-loader.gif"))
+    , mMovieInitS(QString(":/icons/success.png"))
+    //, mMovieInitS(QString(":/icons/success.png"))
+    //, mInitFailed(QString(":/icons/failed.png"))
+    , mMovieShutdown(QString(":/icons/off_1.png"))
 {
     ui->setupUi(this);
     this->ui->btnStart->setIcon(QIcon("start.png"));
@@ -35,6 +68,9 @@ MainWindow::~MainWindow()
 void MainWindow::on_Run_clicked()
 {
     mMovieLoad.start();
+    QMessageLogContext context(__FILE__, __LINE__, __FUNCTION__, "QtWarningMsg");
+    this->ui->tracesArea->outputMessage(QtCriticalMsg, context, "Hello");
+
 }
 
 void MainWindow::on_pushButton_clicked()
