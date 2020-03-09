@@ -1,13 +1,11 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QMovie>
-
-#include <QtGlobal>
-#include "logbrowser.h"
-#include <qapplication.h>
-
 #include "tracesarea.h"
 #include <QDebug>
+#include <QFileDialog>
+#include <QMessageBox>
+
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
   {
       QByteArray localMsg = msg.toLocal8Bit();
@@ -38,27 +36,22 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , mMovieLoad(QString(":/icons/ajax-loader.gif"))
-    , mMovieInitS(QString(":/icons/success.png"))
-    //, mMovieInitS(QString(":/icons/success.png"))
-    //, mInitFailed(QString(":/icons/failed.png"))
-    , mMovieShutdown(QString(":/icons/off_1.png"))
+    , mMovieLoad    (QString( ":/icons/ajax-loader.gif"))
+    , mMovieInitS   (QString( ":/icons/success.png"    ))
+    , mMovieShutdown(QString( ":/icons/off_1.png"      ))
     , mProcess(new QProcess(parent))
+    , mBinaryPath("")
 {
     ui->setupUi(this);
-    this->ui->btnStart->setIcon(QIcon("start.png"));
-    this->ui->btnStart->setIconSize(QSize(65, 65));
-    QString buttonStyle = "QPushButton{border:none;background-color:rgba(255, 255, 255,100);}";
-    this->ui->btnStart->setStyleSheet("QPushButton {border-style: outset; border-width: 0px;}");
 
     //QLabel
-    mMovieLoad.setScaledSize(this->ui->LoadAnimation->size());
-    mMovieInitS.setScaledSize(this->ui->LoadAnimation->size());
-    //mInitFailed.setScaledSize(this->ui->LoadAnimation->size());
+    mMovieLoad.setScaledSize    (this->ui->LoadAnimation->size());
+    mMovieInitS.setScaledSize   (this->ui->LoadAnimation->size());
     mMovieShutdown.setScaledSize(this->ui->LoadAnimation->size());
+
     this->ui->LoadAnimation->setMovie(&mMovieLoad);
-    this->ui->InitSuccess->setMovie(&mMovieInitS);
-    this->ui->Shutdown->setMovie(&mMovieShutdown);
+    this->ui->InitSuccess->setMovie  (&mMovieInitS);
+    this->ui->Shutdown->setMovie     (&mMovieShutdown);
 
     connect(mProcess, &QProcess::readyReadStandardOutput, [this](){
         QString output =mProcess->readAllStandardOutput();
@@ -69,6 +62,7 @@ MainWindow::MainWindow(QWidget *parent)
         QString err = mProcess->readAllStandardError();
         qDebug() << "error: "<<err;
     });
+
 }
 
 MainWindow::~MainWindow()
@@ -78,6 +72,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_Run_clicked()
 {
+
+
     mMovieLoad.start();
     QMessageLogContext context(__FILE__, __LINE__, __FUNCTION__, "QtWarningMsg");
     this->ui->tracesArea->outputMessage(QtCriticalMsg, context, "Hello");
@@ -91,6 +87,7 @@ void MainWindow::on_Run_clicked()
 
 void MainWindow::on_pushButton_clicked()
 {
+
     mMovieInitS.start();
 }
 
@@ -100,4 +97,57 @@ void MainWindow::on_pushButton_4_clicked()
     mProcess->write("Shutdown!!!!");
     mProcess->waitForBytesWritten();
     mProcess->closeWriteChannel();
+}
+//////////////////////////////////////////
+void MainWindow::on_btnRun_clicked()
+{
+    if(mBinaryPath.isEmpty())
+    {
+        QString msg("The binary path is missed");
+        if(warrningMessage(msg))
+            return;
+    }
+
+    QStringList arguments; // NOT used
+    mProcess->start(mBinaryPath);
+    if(QProcess::NotRunning == mProcess->state())
+    {
+        QString msg("The binary was not executed!");
+        if(warrningMessage(msg))
+            return;
+    }
+    else
+    {
+        mMovieLoad.start();
+    }
+}
+
+void MainWindow::on_btnShutdown_clicked()
+{
+
+}
+
+void MainWindow::on_actionPath_to_a_binary_triggered()
+{
+   /* mBinaryPath = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+                                                    "/home",
+                                                    QFileDialog::ShowDirsOnly |
+                                                    QFileDialog::DontResolveSymlinks);
+    qDebug() << "Binary directory: "<< mBinaryPath;*/
+    mBinaryPath = QFileDialog::getOpenFileName(this,
+                                         "Select binary file",
+                                         "/home",
+                                         "All files (*.*)");
+}
+
+bool MainWindow::warrningMessage(const QString& msg)
+{
+    bool clicked = false;
+    qDebug() << "WARNING: " << msg;
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::warning(this, "WARNING", msg);
+    if (reply == QMessageBox::Ok) {
+        clicked = true;
+    }
+    return clicked;
 }

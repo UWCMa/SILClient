@@ -5,8 +5,9 @@
 #include <QMovie>
 #include <QProcess>
 
-#include "tracesarea.h"
+
 class TracesArea;
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -18,8 +19,11 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-private slots:
 
+private:
+    bool warrningMessage(const QString& msg);
+
+private slots:
 
     void on_Run_clicked();
 
@@ -27,13 +31,19 @@ private slots:
 
     void on_pushButton_4_clicked();
 
+    void on_btnRun_clicked();
+
+    void on_btnShutdown_clicked();
+
+    void on_actionPath_to_a_binary_triggered();
+
 private:
     Ui::MainWindow *ui;
     QMovie  mMovieLoad;
     QMovie  mMovieInitS;
-    //QMovie  mInitFailed;
     QMovie  mMovieShutdown;
 
     QProcess* mProcess;
+    QString   mBinaryPath;
 };
 #endif // MAINWINDOW_H

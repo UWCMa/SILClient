@@ -11,8 +11,7 @@ public:
     explicit TracesArea(QWidget *parent = nullptr);
     void outputMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg);
     TracesArea* self();
-public slots:
- //void outputMessage( QtMsgType type, const QString &msg );
+
 
 signals:
  //void sendMessage( QtMsgType type, const QString &msg );

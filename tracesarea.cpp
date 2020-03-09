@@ -2,6 +2,8 @@
 #include <QMetaType>
 #include "logbrowserdialog.h"
 #include <iostream>
+#include <QSizePolicy>
+
 TracesArea::TracesArea(QWidget *parent) :QTextBrowser(parent)
 {
     std::cout << "TracesArea::TracesArea" << std::endl;
