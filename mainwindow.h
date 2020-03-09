@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QMovie>
+#include <QProcess>
 
 #include "tracesarea.h"
 class TracesArea;
@@ -32,5 +33,7 @@ private:
     QMovie  mMovieInitS;
     //QMovie  mInitFailed;
     QMovie  mMovieShutdown;
+
+    QProcess* mProcess;
 };
 #endif // MAINWINDOW_H

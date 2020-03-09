@@ -7,7 +7,7 @@
 #include <qapplication.h>
 
 #include "tracesarea.h"
-
+#include <QDebug>
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
   {
       QByteArray localMsg = msg.toLocal8Bit();
@@ -43,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent)
     //, mMovieInitS(QString(":/icons/success.png"))
     //, mInitFailed(QString(":/icons/failed.png"))
     , mMovieShutdown(QString(":/icons/off_1.png"))
+    , mProcess(new QProcess(parent))
 {
     ui->setupUi(this);
     this->ui->btnStart->setIcon(QIcon("start.png"));
@@ -58,6 +59,16 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->LoadAnimation->setMovie(&mMovieLoad);
     this->ui->InitSuccess->setMovie(&mMovieInitS);
     this->ui->Shutdown->setMovie(&mMovieShutdown);
+
+    connect(mProcess, &QProcess::readyReadStandardOutput, [this](){
+        QString output =mProcess->readAllStandardOutput();
+        qDebug() << "output: "<< output;
+    });
+
+    connect(mProcess, &QProcess::readyReadStandardError, [this](){
+        QString err = mProcess->readAllStandardError();
+        qDebug() << "error: "<<err;
+    });
 }
 
 MainWindow::~MainWindow()
@@ -71,6 +82,11 @@ void MainWindow::on_Run_clicked()
     QMessageLogContext context(__FILE__, __LINE__, __FUNCTION__, "QtWarningMsg");
     this->ui->tracesArea->outputMessage(QtCriticalMsg, context, "Hello");
 
+    QString program = "C:/Users/skobz/source/repos/forqt/Debug/forqt.exe";
+    QStringList arguments;
+    //arguments << "-style" << "motif";
+    mProcess->start(program);
+
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -81,4 +97,7 @@ void MainWindow::on_pushButton_clicked()
 void MainWindow::on_pushButton_4_clicked()
 {
     mMovieShutdown.start();
+    mProcess->write("Shutdown!!!!");
+    mProcess->waitForBytesWritten();
+    mProcess->closeWriteChannel();
 }
