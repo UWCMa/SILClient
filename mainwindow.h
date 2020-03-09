@@ -29,7 +29,7 @@ private:
     Ui::MainWindow *ui;
     QMovie  mMovieLoad;
     QMovie  mMovieInitS;
-    QMovie  mInitFailed;
+    //QMovie  mInitFailed;
     QMovie  mMovieShutdown;
 };
 #endif // MAINWINDOW_H
