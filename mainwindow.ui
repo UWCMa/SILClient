@@ -15,7 +15,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="4" column="0" colspan="11">
+    <item row="4" column="0" colspan="12">
      <widget class="Line" name="line">
       <property name="maximumSize">
        <size>
@@ -34,7 +34,7 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="10">
+    <item row="0" column="11">
      <widget class="QPushButton" name="btnClear">
       <property name="maximumSize">
        <size>
@@ -103,7 +103,7 @@
       </property>
      </widget>
     </item>
-    <item row="5" column="0" colspan="11">
+    <item row="5" column="0" colspan="12">
      <widget class="TracesArea" name="tracesArea"/>
     </item>
     <item row="0" column="5">
@@ -153,10 +153,23 @@
       </property>
      </widget>
     </item>
-    <item row="6" column="10">
+    <item row="6" column="11">
      <widget class="QPushButton" name="btnStart">
       <property name="text">
        <string/>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="10">
+     <widget class="QLabel" name="labelClear">
+      <property name="maximumSize">
+       <size>
+        <width>40</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>TextLabel</string>
       </property>
      </widget>
     </item>
@@ -180,6 +193,9 @@
     <addaction name="separator"/>
     <addaction name="actionPath_to_a_binary"/>
     <addaction name="actionSet_Run_period"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave_to_File"/>
+    <addaction name="separator"/>
    </widget>
    <addaction name="menuSettings"/>
   </widget>
@@ -190,15 +206,28 @@
    </property>
    <property name="icon">
     <iconset resource="Resources.qrc">
-     <normaloff>:/icons/start.png</normaloff>:/icons/start.png</iconset>
+     <normaloff>:/icons/folder.png</normaloff>:/icons/folder.png</iconset>
    </property>
    <property name="text">
     <string>Path to a binary</string>
    </property>
   </action>
   <action name="actionSet_Run_period">
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/repeat.png</normaloff>:/icons/repeat.png</iconset>
+   </property>
    <property name="text">
     <string>Set Run period</string>
+   </property>
+  </action>
+  <action name="actionSave_to_File">
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/save.png</normaloff>:/icons/save.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save to File</string>
    </property>
   </action>
  </widget>

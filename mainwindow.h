@@ -21,15 +21,12 @@ public:
     ~MainWindow();
 
 private:
-    bool warrningMessage(const QString& msg);
+    bool warningMessage(const QString& msg);
 
 private slots:
 
     void on_Run_clicked();
 
-    void on_pushButton_clicked();
-
-    void on_pushButton_4_clicked();
 
     void on_btnRun_clicked();
 
@@ -42,8 +39,11 @@ private:
     QMovie  mMovieLoad;
     QMovie  mMovieInitS;
     QMovie  mMovieShutdown;
+    QIcon  mClear;
 
     QProcess* mProcess;
     QString   mBinaryPath;
+
+    bool isRuning;
 };
 #endif // MAINWINDOW_H

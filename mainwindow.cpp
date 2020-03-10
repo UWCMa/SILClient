@@ -38,9 +38,10 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
     , mMovieLoad    (QString( ":/icons/ajax-loader.gif"))
     , mMovieInitS   (QString( ":/icons/success.png"    ))
-    , mMovieShutdown(QString( ":/icons/off_1.png"      ))
+    , mMovieShutdown(QString( ":/icons/active.png" ))
     , mProcess(new QProcess(parent))
     , mBinaryPath("")
+    , isRuning(false)
 {
     ui->setupUi(this);
 
@@ -53,6 +54,11 @@ MainWindow::MainWindow(QWidget *parent)
     this->ui->InitSuccess->setMovie  (&mMovieInitS);
     this->ui->Shutdown->setMovie     (&mMovieShutdown);
 
+    mMovieLoad.start(); // REDID just to see picture
+    mMovieLoad.stop();
+    mMovieShutdown.start();
+    mMovieShutdown.stop();
+
     connect(mProcess, &QProcess::readyReadStandardOutput, [this](){
         QString output =mProcess->readAllStandardOutput();
         qDebug() << "output: "<< output;
@@ -63,6 +69,11 @@ MainWindow::MainWindow(QWidget *parent)
         qDebug() << "error: "<<err;
     });
 
+    QPixmap pic(":/icons/clear.png");
+    //ui->label->setPixmap(pic);
+    this->ui->labelClear->setPixmap(pic);
+    this->ui->labelClear->setScaledContents(true);
+    this->ui->labelClear->show();
 }
 
 MainWindow::~MainWindow()
@@ -85,62 +96,65 @@ void MainWindow::on_Run_clicked()
 
 }
 
-void MainWindow::on_pushButton_clicked()
-{
-
-    mMovieInitS.start();
-}
-
-void MainWindow::on_pushButton_4_clicked()
-{
-    mMovieShutdown.start();
-    mProcess->write("Shutdown!!!!");
-    mProcess->waitForBytesWritten();
-    mProcess->closeWriteChannel();
-}
 //////////////////////////////////////////
 void MainWindow::on_btnRun_clicked()
 {
-    if(mBinaryPath.isEmpty())
+    if(false == isRuning)
     {
-        QString msg("The binary path is missed");
-        if(warrningMessage(msg))
-            return;
-    }
+        if(mBinaryPath.isEmpty())
+        {
+            QString msg("The binary path is missed");
+            if(warningMessage(msg))
+                return;
+        }
 
-    QStringList arguments; // NOT used
-    mProcess->start(mBinaryPath);
-    if(QProcess::NotRunning == mProcess->state())
-    {
-        QString msg("The binary was not executed!");
-        if(warrningMessage(msg))
-            return;
-    }
-    else
-    {
-        mMovieLoad.start();
+        QStringList arguments; // NOT used
+        mProcess->start(mBinaryPath);
+        if(QProcess::NotRunning == mProcess->state())
+        {
+            QString msg("The binary was not executed!");
+            mProcess->terminate();
+            if(warningMessage(msg))
+                return;
+        }
+        else
+        {
+            this->ui->LoadAnimation->setMovie(&mMovieLoad);
+            mMovieLoad.start();
+            mMovieShutdown.setFileName(QString( ":/icons/active.png" ));
+            mMovieShutdown.start();
+            mMovieShutdown.stop();
+            isRuning = true;
+        }
     }
 }
 
 void MainWindow::on_btnShutdown_clicked()
 {
+    if(isRuning)
+    {
+         mMovieLoad.stop();
+        //this->ui->LoadAnimation->clear();
 
+        mMovieShutdown.setFileName(QString( ":/icons/inactive.png" ));
+        mMovieShutdown.start();
+        mMovieShutdown.stop();
+        mProcess->write("Shutdown!!!!");
+        mProcess->waitForBytesWritten();
+        mProcess->closeWriteChannel();
+        isRuning = false;
+    }
 }
 
 void MainWindow::on_actionPath_to_a_binary_triggered()
 {
-   /* mBinaryPath = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
-                                                    "/home",
-                                                    QFileDialog::ShowDirsOnly |
-                                                    QFileDialog::DontResolveSymlinks);
-    qDebug() << "Binary directory: "<< mBinaryPath;*/
     mBinaryPath = QFileDialog::getOpenFileName(this,
                                          "Select binary file",
                                          "/home",
                                          "All files (*.*)");
 }
 
-bool MainWindow::warrningMessage(const QString& msg)
+bool MainWindow::warningMessage(const QString& msg)
 {
     bool clicked = false;
     qDebug() << "WARNING: " << msg;

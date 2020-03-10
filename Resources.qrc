@@ -10,5 +10,13 @@
         <file>icons/spinning-arrows.gif</file>
         <file>icons/start.png</file>
         <file>icons/success.png</file>
+        <file>icons/stop_clock.png</file>
+        <file>icons/active.png</file>
+        <file>icons/inactive.png</file>
+        <file>icons/clear.png</file>
+        <file>icons/period.png</file>
+        <file>icons/folder.png</file>
+        <file>icons/save.png</file>
+        <file>icons/repeat.png</file>
     </qresource>
 </RCC>
