@@ -38,6 +38,7 @@ void TracesArea::outputMessage(QtMsgType type, const QMessageLogContext &context
     switch (type) {
     case QtDebugMsg:
         fprintf(stderr, "Debug: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
+        append(tr("— INFO: %1").arg(str));
         break;
     case QtInfoMsg:
         fprintf(stderr, "Info: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);

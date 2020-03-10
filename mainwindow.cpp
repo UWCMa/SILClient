@@ -6,6 +6,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QInputDialog>
+#include <QMetaEnum>
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
   {
@@ -42,8 +43,8 @@ MainWindow::MainWindow(QWidget *parent)
     , mMovieShutdown(QString( ":/icons/inactive.png" ))
     , mProcess(new QProcess(parent))
     , mBinaryPath("")
+    , mRunPeriod("40")
     , isRuning(false)
-    , mRunPeriod(40)
 {
     ui->setupUi(this);
 
@@ -62,11 +63,15 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(mProcess, &QProcess::readyReadStandardOutput, [this](){
         QString output =mProcess->readAllStandardOutput();
+        QMessageLogContext context;
+        this->ui->tracesArea->outputMessage(QtDebugMsg, context, output);
         qDebug() << "output: "<< output;
     });
 
     connect(mProcess, &QProcess::readyReadStandardError, [this](){
         QString err = mProcess->readAllStandardError();
+        QMessageLogContext context;
+        this->ui->tracesArea->outputMessage(QtCriticalMsg, context, err);
         qDebug() << "error: "<<err;
     });
 
@@ -83,7 +88,18 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    //mProcess->terminate();
     delete ui;
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    qDebug() << "Main window is closed";
+    if(isProcessRunning())
+    {
+        mProcess->terminate();
+        mProcess->kill();
+    }
 }
 
 void MainWindow::on_Run_clicked()
@@ -115,7 +131,7 @@ void MainWindow::on_btnRun_clicked()
 
         QStringList arguments; // NOT used
         mProcess->start(mBinaryPath);
-        if(QProcess::NotRunning == mProcess->state())
+        if(!isProcessRunning())
         {
             QString msg("The binary was not executed!");
             mProcess->terminate();
@@ -124,11 +140,13 @@ void MainWindow::on_btnRun_clicked()
         }
         else
         {
+            qDebug() << "Running!!!";
             this->ui->LoadAnimation->setMovie(&mMovieLoad);
             mMovieLoad.start();
             mMovieShutdown.setFileName(QString( ":/icons/active.png" ));
             mMovieShutdown.start();
             mMovieShutdown.stop();
+            writeToStdin(mRunPeriod);
             isRuning = true;
         }
     }
@@ -136,18 +154,21 @@ void MainWindow::on_btnRun_clicked()
 
 void MainWindow::on_btnShutdown_clicked()
 {
-    if(isRuning)
+    if(true == isRuning && isProcessRunning())
     {
-        mMovieLoad.stop();
+        qDebug() << "Shutdown\n";
 
-        mMovieShutdown.setFileName(QString( ":/icons/inactive.png" ));
-        mMovieShutdown.start();
-        mMovieShutdown.stop();
-        mProcess->write("shutdown");//TODO normal typeof message
-        mProcess->waitForBytesWritten();
-        mProcess->closeWriteChannel();
-        isRuning = false;
+        QMetaEnum metaEnum = QMetaEnum::fromType<eProcessCmd>();
+        QString text = metaEnum.valueToKey(SIL_SHUTDOWN);
+        //text.append('\n');
+        mProcess->start();
+        writeToStdin("1");
     }
+    mMovieShutdown.setFileName(QString( ":/icons/inactive.png" ));
+    mMovieShutdown.start();
+    mMovieShutdown.stop();
+    mMovieLoad.stop();
+    isRuning = false;
 }
 
 void MainWindow::on_actionPath_to_a_binary_triggered()
@@ -177,10 +198,26 @@ void MainWindow::on_actionSet_Run_period_triggered()
                                          "Run Period(ms):", QLineEdit::Normal,
                                          "", nullptr);
     this->ui->labelPeriodValue->setText(text); // add to check of number
-    //add check!!
-    QByteArray array = text.toLocal8Bit();
-    char* buffer = array.data();
-    mProcess->write(buffer);//TODO normal typeof message
-    mProcess->waitForBytesWritten();
-    mProcess->closeWriteChannel();
+    mRunPeriod = text;
+
+}
+
+void MainWindow::writeToStdin(const QString& text)
+{
+    if(isProcessRunning())
+    {
+        qDebug() << "Sending Signal to process: " << text;
+        QByteArray array = text.toLocal8Bit();
+        char* buffer = array.data();
+        mProcess->write(buffer);
+        mProcess->waitForBytesWritten();
+        mProcess->closeWriteChannel();
+
+    }
+}
+
+bool MainWindow::isProcessRunning() const
+{
+    return QProcess::NotRunning == mProcess->state()
+           ? false : true;
 }
