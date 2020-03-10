@@ -130,7 +130,8 @@ void MainWindow::on_btnRun_clicked()
         }
 
         QStringList arguments; // NOT used
-        mProcess->start(mBinaryPath);
+        arguments << mRunPeriod;
+        mProcess->start(mBinaryPath, arguments);
         if(!isProcessRunning())
         {
             QString msg("The binary was not executed!");
@@ -146,7 +147,6 @@ void MainWindow::on_btnRun_clicked()
             mMovieShutdown.setFileName(QString( ":/icons/active.png" ));
             mMovieShutdown.start();
             mMovieShutdown.stop();
-            writeToStdin(mRunPeriod);
             isRuning = true;
         }
     }
@@ -160,9 +160,7 @@ void MainWindow::on_btnShutdown_clicked()
 
         QMetaEnum metaEnum = QMetaEnum::fromType<eProcessCmd>();
         QString text = metaEnum.valueToKey(SIL_SHUTDOWN);
-        //text.append('\n');
-        mProcess->start();
-        writeToStdin("1");
+        writeToStdin("shutdown");
     }
     mMovieShutdown.setFileName(QString( ":/icons/inactive.png" ));
     mMovieShutdown.start();
@@ -209,9 +207,13 @@ void MainWindow::writeToStdin(const QString& text)
         qDebug() << "Sending Signal to process: " << text;
         QByteArray array = text.toLocal8Bit();
         char* buffer = array.data();
-        mProcess->write(buffer);
+        qint64 bytes = mProcess->write(buffer);
         mProcess->waitForBytesWritten();
         mProcess->closeWriteChannel();
+        qDebug() << "bytes = " << bytes;
+        qDebug() << "text = " << text;
+        qDebug() << "state: " << mProcess->state();
+
 
     }
 }
@@ -220,4 +222,14 @@ bool MainWindow::isProcessRunning() const
 {
     return QProcess::NotRunning == mProcess->state()
            ? false : true;
+}
+
+void MainWindow::on_actionSave_to_File_triggered()
+{
+    this->ui->tracesArea->save();
+}
+
+void MainWindow::on_btnClear_clicked()
+{
+    this->ui->tracesArea->clear();
 }

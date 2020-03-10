@@ -43,12 +43,16 @@ private slots:
 
     void on_actionSet_Run_period_triggered();
 
+    void on_actionSave_to_File_triggered();
+
+    void on_btnClear_clicked();
+
 private:
     Ui::MainWindow *ui;
     QMovie  mMovieLoad;
     QMovie  mMovieInitS;
     QMovie  mMovieShutdown;
-    QIcon  mClear;
+    QIcon   mClear;
 
     QProcess* mProcess;
     QString   mBinaryPath;

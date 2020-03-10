@@ -1,12 +1,13 @@
 #include "tracesarea.h"
 #include <QMetaType>
 #include "logbrowserdialog.h"
-#include <iostream>
 #include <QSizePolicy>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QTextStream>
 
 TracesArea::TracesArea(QWidget *parent) :QTextBrowser(parent)
 {
-    std::cout << "TracesArea::TracesArea" << std::endl;
 }
 
 void TracesArea::outputMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg)
@@ -37,7 +38,7 @@ void TracesArea::outputMessage(QtMsgType type, const QMessageLogContext &context
     str.append(function);
     switch (type) {
     case QtDebugMsg:
-        fprintf(stderr, "Debug: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
+        //fprintf(stderr, "Debug: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
         append(tr("— INFO: %1").arg(str));
         break;
     case QtInfoMsg:
@@ -54,4 +55,32 @@ void TracesArea::outputMessage(QtMsgType type, const QMessageLogContext &context
         fprintf(stderr, "Fatal: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
         break;
     }
+}
+
+void TracesArea::save()
+{
+ QString saveFileName = QFileDialog::getSaveFileName(
+ this,
+ tr("Save Log Output"),
+ tr("%1/logfile.txt").arg(QDir::homePath()),
+ tr("Text Files (*.txt);;All Files (*)")
+ );
+
+if(saveFileName.isEmpty())
+ return;
+
+QFile file(saveFileName);
+ if(!file.open(QIODevice::WriteOnly)) {
+ QMessageBox::warning(
+ this,
+ tr("Error"),
+ QString(tr("<nobr>File '%1'<br/>cannot be opened for writing.<br/><br/>"
+ "The log output could <b>not</b> be saved!</nobr>"))
+ .arg(saveFileName));
+ return;
+ }
+
+QTextStream stream(&file);
+ stream << toPlainText();
+ file.close();
 }

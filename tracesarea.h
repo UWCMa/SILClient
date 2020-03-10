@@ -13,6 +13,7 @@ public:
     TracesArea* self();
 
 
+    void save();
 signals:
  //void sendMessage( QtMsgType type, const QString &msg );
 
