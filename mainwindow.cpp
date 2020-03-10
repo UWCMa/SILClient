@@ -51,7 +51,6 @@ MainWindow::MainWindow(QWidget *parent)
     mMovieShutdown.setScaledSize(this->ui->LoadAnimation->size());
 
     this->ui->LoadAnimation->setMovie(&mMovieLoad);
-    this->ui->InitSuccess->setMovie  (&mMovieInitS);
     this->ui->Shutdown->setMovie     (&mMovieShutdown);
 
     mMovieLoad.start(); // REDID just to see picture
@@ -69,11 +68,16 @@ MainWindow::MainWindow(QWidget *parent)
         qDebug() << "error: "<<err;
     });
 
-    QPixmap pic(":/icons/clear.png");
+    QPixmap picClear(":/icons/clear.png");
     //ui->label->setPixmap(pic);
-    this->ui->labelClear->setPixmap(pic);
+    this->ui->labelClear->setPixmap(picClear);
     this->ui->labelClear->setScaledContents(true);
     this->ui->labelClear->show();
+
+    QPixmap picFrog(":/icons/frog.png");
+    this->ui->labelFrog->setPixmap(picFrog);
+    this->ui->labelFrog->setScaledContents(true);
+    this->ui->labelFrog->show();
 }
 
 MainWindow::~MainWindow()

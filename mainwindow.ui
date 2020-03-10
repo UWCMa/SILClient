@@ -15,7 +15,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="4" column="0" colspan="12">
+    <item row="4" column="0" colspan="14">
      <widget class="Line" name="line">
       <property name="maximumSize">
        <size>
@@ -34,7 +34,7 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="11">
+    <item row="0" column="13">
      <widget class="QPushButton" name="btnClear">
       <property name="maximumSize">
        <size>
@@ -60,15 +60,8 @@
       </property>
      </spacer>
     </item>
-    <item row="6" column="4" colspan="4">
+    <item row="6" column="3" colspan="5">
      <widget class="QWidget" name="widget" native="true"/>
-    </item>
-    <item row="6" column="2">
-     <widget class="QLabel" name="InitSuccess">
-      <property name="text">
-       <string>TextLabel</string>
-      </property>
-     </widget>
     </item>
     <item row="0" column="1">
      <spacer name="horizontalSpacer_2">
@@ -83,12 +76,42 @@
       </property>
      </spacer>
     </item>
-    <item row="6" column="1">
-     <widget class="QPushButton" name="bnInit">
-      <property name="text">
-       <string>Init</string>
+    <item row="6" column="13">
+     <layout class="QHBoxLayout" name="horizontalLayout_7">
+      <item>
+       <widget class="QLabel" name="labelProdaction">
+        <property name="text">
+         <string>StanProduction</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="labelFrog">
+        <property name="maximumSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="0" column="10">
+     <spacer name="horizontalSpacer_4">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
       </property>
-     </widget>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
     </item>
     <item row="0" column="8">
      <widget class="QLabel" name="Shutdown">
@@ -103,10 +126,10 @@
       </property>
      </widget>
     </item>
-    <item row="5" column="0" colspan="12">
+    <item row="5" column="0" colspan="14">
      <widget class="TracesArea" name="tracesArea"/>
     </item>
-    <item row="0" column="5">
+    <item row="0" column="4">
      <layout class="QHBoxLayout" name="horizontalLayout_4">
       <item>
        <widget class="QPushButton" name="btnRun">
@@ -140,7 +163,20 @@
       </item>
      </layout>
     </item>
-    <item row="0" column="6">
+    <item row="0" column="2">
+     <spacer name="horizontalSpacer_6">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="0" column="5">
      <widget class="QLabel" name="LoadAnimation">
       <property name="maximumSize">
        <size>
@@ -153,14 +189,7 @@
       </property>
      </widget>
     </item>
-    <item row="6" column="11">
-     <widget class="QPushButton" name="btnStart">
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="10">
+    <item row="0" column="11">
      <widget class="QLabel" name="labelClear">
       <property name="maximumSize">
        <size>
@@ -172,6 +201,19 @@
        <string>TextLabel</string>
       </property>
      </widget>
+    </item>
+    <item row="0" column="6">
+     <spacer name="horizontalSpacer_3">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
     </item>
    </layout>
   </widget>

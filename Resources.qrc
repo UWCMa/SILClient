@@ -18,5 +18,6 @@
         <file>icons/folder.png</file>
         <file>icons/save.png</file>
         <file>icons/repeat.png</file>
+        <file>icons/frog.png</file>
     </qresource>
 </RCC>
