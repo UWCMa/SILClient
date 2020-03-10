@@ -15,13 +15,20 @@ QT_END_NAMESPACE
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-
 public:
+
+    enum eProcessCmd { SIL_UNKNOWN = 0, SIL_SHUTDOWN};
+    Q_ENUM(eProcessCmd)
+
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void closeEvent (QCloseEvent *event);
+
 private:
     bool warningMessage(const QString& msg);
+    void writeToStdin(const QString &text);
+    bool isProcessRunning() const;
 
 private slots:
 
@@ -45,8 +52,8 @@ private:
 
     QProcess* mProcess;
     QString   mBinaryPath;
+    QString   mRunPeriod;
+    bool      isRuning;
 
-    bool isRuning;
-    int  mRunPeriod;
 };
 #endif // MAINWINDOW_H
