@@ -34,6 +34,8 @@ private slots:
 
     void on_actionPath_to_a_binary_triggered();
 
+    void on_actionSet_Run_period_triggered();
+
 private:
     Ui::MainWindow *ui;
     QMovie  mMovieLoad;
@@ -45,5 +47,6 @@ private:
     QString   mBinaryPath;
 
     bool isRuning;
+    int  mRunPeriod;
 };
 #endif // MAINWINDOW_H

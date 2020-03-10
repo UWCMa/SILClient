@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QInputDialog>
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
   {
@@ -38,10 +39,11 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
     , mMovieLoad    (QString( ":/icons/ajax-loader.gif"))
     , mMovieInitS   (QString( ":/icons/success.png"    ))
-    , mMovieShutdown(QString( ":/icons/active.png" ))
+    , mMovieShutdown(QString( ":/icons/inactive.png" ))
     , mProcess(new QProcess(parent))
     , mBinaryPath("")
     , isRuning(false)
+    , mRunPeriod(40)
 {
     ui->setupUi(this);
 
@@ -69,7 +71,6 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
     QPixmap picClear(":/icons/clear.png");
-    //ui->label->setPixmap(pic);
     this->ui->labelClear->setPixmap(picClear);
     this->ui->labelClear->setScaledContents(true);
     this->ui->labelClear->show();
@@ -137,13 +138,12 @@ void MainWindow::on_btnShutdown_clicked()
 {
     if(isRuning)
     {
-         mMovieLoad.stop();
-        //this->ui->LoadAnimation->clear();
+        mMovieLoad.stop();
 
         mMovieShutdown.setFileName(QString( ":/icons/inactive.png" ));
         mMovieShutdown.start();
         mMovieShutdown.stop();
-        mProcess->write("Shutdown!!!!");
+        mProcess->write("shutdown");//TODO normal typeof message
         mProcess->waitForBytesWritten();
         mProcess->closeWriteChannel();
         isRuning = false;
@@ -168,4 +168,19 @@ bool MainWindow::warningMessage(const QString& msg)
         clicked = true;
     }
     return clicked;
+}
+
+void MainWindow::on_actionSet_Run_period_triggered()
+{
+    //bool ok = true;
+    QString text = QInputDialog::getText(0, "Input dialog",
+                                         "Run Period(ms):", QLineEdit::Normal,
+                                         "", nullptr);
+    this->ui->labelPeriodValue->setText(text); // add to check of number
+    //add check!!
+    QByteArray array = text.toLocal8Bit();
+    char* buffer = array.data();
+    mProcess->write(buffer);//TODO normal typeof message
+    mProcess->waitForBytesWritten();
+    mProcess->closeWriteChannel();
 }
