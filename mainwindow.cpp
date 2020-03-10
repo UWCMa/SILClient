@@ -173,7 +173,7 @@ bool MainWindow::warningMessage(const QString& msg)
 void MainWindow::on_actionSet_Run_period_triggered()
 {
     //bool ok = true;
-    QString text = QInputDialog::getText(0, "Input dialog",
+    QString text = QInputDialog::getText(0, "",
                                          "Run Period(ms):", QLineEdit::Normal,
                                          "", nullptr);
     this->ui->labelPeriodValue->setText(text); // add to check of number
