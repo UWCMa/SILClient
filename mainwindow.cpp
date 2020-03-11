@@ -88,7 +88,8 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    //mProcess->terminate();
+    if(isProcessRunning())
+        mProcess->kill();
     delete ui;
 }
 
@@ -175,25 +176,24 @@ bool MainWindow::warningMessage(const QString& msg)
 
 void MainWindow::on_actionSet_Run_period_triggered()
 {
-    //bool ok = true;
+    bool ok = false;
     QString text = QInputDialog::getText(0, "",
                                          "Run Period(ms):", QLineEdit::Normal,
-                                         "", nullptr);
-    this->ui->labelPeriodValue->setText(text); // add to check of number
-    mRunPeriod = text;
-
+                                          mRunPeriod, &ok);
+    if(!ok)
+        return;
+    if(20 > text.toInt() || 200 < text.toInt())
+    {
+        QString msg("The running period should be in the range(20 - 200)");
+        warningMessage(msg);
+    }
+    else if(!text.isEmpty())
+    {
+        this->ui->labelPeriodValue->setText(text);
+        mRunPeriod = text;
+    }
 }
 
-//void MainWindow::on_actionSet_Run_period_triggered()
-//{
-//    //bool ok = true;
-//    QString text = QInputDialog::getText(0, "",
-//                                         "Run Period(ms):", QLineEdit::Normal,
-//                                         "", nullptr);
-//    this->ui->labelPeriodValue->setText(text); // add to check of number
-//    mRunPeriod = text;
-
-//}
 void MainWindow::writeToStdin(const QString& text)
 {
     if(isProcessRunning())
@@ -207,8 +207,6 @@ void MainWindow::writeToStdin(const QString& text)
         qDebug() << "bytes = " << bytes;
         qDebug() << "text = " << text;
         qDebug() << "state: " << mProcess->state();
-
-
     }
 }
 
@@ -220,10 +218,11 @@ bool MainWindow::isProcessRunning() const
 
 void MainWindow::on_actionSave_to_File_triggered()
 {
-    this->ui->tracesArea->save();
+    this->ui->tracesArea->saveLogsToFileSstem();
 }
 
 void MainWindow::on_btnClear_clicked()
 {
     this->ui->tracesArea->clear();
 }
+

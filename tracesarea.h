@@ -3,28 +3,13 @@
 
 #include <QTextBrowser>
 
-
 class TracesArea : public QTextBrowser
 {
     Q_OBJECT
 public:
-    explicit TracesArea(QWidget *parent = nullptr);
-    void outputMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg);
-    TracesArea* self();
-
-
-    void save();
-signals:
- //void sendMessage( QtMsgType type, const QString &msg );
-
-private:
- //LogBrowserDialog *browserDialog;
-
+    explicit TracesArea(QWidget * = nullptr);
+    void outputMessage(QtMsgType, const QMessageLogContext&
+                                , const QString &);
+    void saveLogsToFileSstem();
 };
-
-inline TracesArea* TracesArea::self()
-{
-    return this;
-}
-
 #endif // TRACESAREA_H

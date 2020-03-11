@@ -15,40 +15,21 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="4" column="0" colspan="15">
-     <widget class="Line" name="line">
+    <item row="0" column="9">
+     <widget class="QLabel" name="Shutdown">
       <property name="maximumSize">
        <size>
-        <width>16777215</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="baseSize">
-       <size>
-        <width>13456</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="14">
-     <widget class="QPushButton" name="btnClear">
-      <property name="maximumSize">
-       <size>
-        <width>100</width>
+        <width>40</width>
         <height>40</height>
        </size>
       </property>
       <property name="text">
-       <string>Clear</string>
+       <string>TextLabel</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="10">
-     <spacer name="horizontalSpacer">
+    <item row="0" column="7">
+     <spacer name="horizontalSpacer_3">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -63,8 +44,25 @@
     <item row="6" column="4" colspan="5">
      <widget class="QWidget" name="widget" native="true"/>
     </item>
-    <item row="0" column="2">
-     <spacer name="horizontalSpacer_2">
+    <item row="0" column="8">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="btnShutdown">
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Shutdown</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="0" column="10">
+     <spacer name="horizontalSpacer">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -100,102 +98,6 @@
       </item>
      </layout>
     </item>
-    <item row="0" column="11">
-     <spacer name="horizontalSpacer_4">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>40</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="0" column="0">
-     <widget class="QLabel" name="labelPeriodText">
-      <property name="text">
-       <string>Run Period: </string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="9">
-     <widget class="QLabel" name="Shutdown">
-      <property name="maximumSize">
-       <size>
-        <width>40</width>
-        <height>40</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>TextLabel</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="0" colspan="15">
-     <widget class="TracesArea" name="tracesArea"/>
-    </item>
-    <item row="0" column="5">
-     <layout class="QHBoxLayout" name="horizontalLayout_4">
-      <item>
-       <widget class="QPushButton" name="btnRun">
-        <property name="maximumSize">
-         <size>
-          <width>100</width>
-          <height>40</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Run</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="0" column="8">
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QPushButton" name="btnShutdown">
-        <property name="maximumSize">
-         <size>
-          <width>100</width>
-          <height>40</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Shutdown</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="0" column="3">
-     <spacer name="horizontalSpacer_6">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>40</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="0" column="6">
-     <widget class="QLabel" name="LoadAnimation">
-      <property name="maximumSize">
-       <size>
-        <width>40</width>
-        <height>40</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>TextLabel</string>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="12">
      <widget class="QLabel" name="labelClear">
       <property name="maximumSize">
@@ -209,8 +111,21 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="7">
-     <spacer name="horizontalSpacer_3">
+    <item row="0" column="11">
+     <spacer name="horizontalSpacer_4">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="0" column="3">
+     <spacer name="horizontalSpacer_6">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -229,6 +144,91 @@
       </property>
      </widget>
     </item>
+    <item row="0" column="6">
+     <widget class="QLabel" name="LoadAnimation">
+      <property name="maximumSize">
+       <size>
+        <width>40</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="5">
+     <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <item>
+       <widget class="QPushButton" name="btnRun">
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Run</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="5" column="0" colspan="15">
+     <widget class="TracesArea" name="tracesArea"/>
+    </item>
+    <item row="0" column="2">
+     <spacer name="horizontalSpacer_2">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="4" column="0" colspan="15">
+     <widget class="Line" name="line">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="baseSize">
+       <size>
+        <width>13456</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="14">
+     <widget class="QPushButton" name="btnClear">
+      <property name="maximumSize">
+       <size>
+        <width>100</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Clear</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="labelPeriodText">
+      <property name="text">
+       <string>Run Period: </string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -244,31 +244,14 @@
     <property name="title">
      <string>Settings</string>
     </property>
-    <widget class="QMenu" name="menuSet_Run_period">
-     <property name="title">
-      <string>Set Run period</string>
-     </property>
-     <property name="icon">
-      <iconset resource="Resources.qrc">
-       <normaloff>:/icons/period.png</normaloff>:/icons/period.png</iconset>
-     </property>
-     <addaction name="separator"/>
-     <addaction name="action20"/>
-     <addaction name="action40"/>
-     <addaction name="action50"/>
-     <addaction name="action60"/>
-     <addaction name="action120"/>
-     <addaction name="action120_ms"/>
-     <addaction name="action140_ms"/>
-    </widget>
     <addaction name="separator"/>
     <addaction name="separator"/>
     <addaction name="separator"/>
     <addaction name="actionPath_to_a_binary"/>
+    <addaction name="actionSet_Run_period"/>
     <addaction name="separator"/>
     <addaction name="actionSave_to_File"/>
     <addaction name="separator"/>
-    <addaction name="menuSet_Run_period"/>
    </widget>
    <addaction name="menuSettings"/>
   </widget>
@@ -285,6 +268,15 @@
     <string>Path to a binary</string>
    </property>
   </action>
+  <action name="actionSet_Run_period">
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/repeat.png</normaloff>:/icons/repeat.png</iconset>
+   </property>
+   <property name="text">
+    <string>Set Run period</string>
+   </property>
+  </action>
   <action name="actionSave_to_File">
    <property name="icon">
     <iconset resource="Resources.qrc">
@@ -292,46 +284,6 @@
    </property>
    <property name="text">
     <string>Save to File</string>
-   </property>
-  </action>
-  <action name="action20">
-   <property name="text">
-    <string> 20  ms</string>
-   </property>
-  </action>
-  <action name="action30">
-   <property name="text">
-    <string>40</string>
-   </property>
-  </action>
-  <action name="action40">
-   <property name="text">
-    <string> 40  ms</string>
-   </property>
-  </action>
-  <action name="action50">
-   <property name="text">
-    <string> 60  ms</string>
-   </property>
-  </action>
-  <action name="action60">
-   <property name="text">
-    <string> 80  ms</string>
-   </property>
-  </action>
-  <action name="action120">
-   <property name="text">
-    <string>100 ms</string>
-   </property>
-  </action>
-  <action name="action120_ms">
-   <property name="text">
-    <string>120 ms</string>
-   </property>
-  </action>
-  <action name="action140_ms">
-   <property name="text">
-    <string>140 ms</string>
    </property>
   </action>
  </widget>
