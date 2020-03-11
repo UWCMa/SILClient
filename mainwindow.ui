@@ -81,7 +81,7 @@
       <item>
        <widget class="QLabel" name="labelProdaction">
         <property name="text">
-         <string>StanProduction</string>
+         <string>TTTech Auto</string>
         </property>
        </widget>
       </item>
