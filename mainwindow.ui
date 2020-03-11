@@ -244,14 +244,31 @@
     <property name="title">
      <string>Settings</string>
     </property>
+    <widget class="QMenu" name="menuSet_Run_period">
+     <property name="title">
+      <string>Set Run period</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Resources.qrc">
+       <normaloff>:/icons/period.png</normaloff>:/icons/period.png</iconset>
+     </property>
+     <addaction name="separator"/>
+     <addaction name="action20"/>
+     <addaction name="action40"/>
+     <addaction name="action50"/>
+     <addaction name="action60"/>
+     <addaction name="action120"/>
+     <addaction name="action120_ms"/>
+     <addaction name="action140_ms"/>
+    </widget>
     <addaction name="separator"/>
     <addaction name="separator"/>
     <addaction name="separator"/>
     <addaction name="actionPath_to_a_binary"/>
-    <addaction name="actionSet_Run_period"/>
     <addaction name="separator"/>
     <addaction name="actionSave_to_File"/>
     <addaction name="separator"/>
+    <addaction name="menuSet_Run_period"/>
    </widget>
    <addaction name="menuSettings"/>
   </widget>
@@ -268,15 +285,6 @@
     <string>Path to a binary</string>
    </property>
   </action>
-  <action name="actionSet_Run_period">
-   <property name="icon">
-    <iconset resource="Resources.qrc">
-     <normaloff>:/icons/repeat.png</normaloff>:/icons/repeat.png</iconset>
-   </property>
-   <property name="text">
-    <string>Set Run period</string>
-   </property>
-  </action>
   <action name="actionSave_to_File">
    <property name="icon">
     <iconset resource="Resources.qrc">
@@ -284,6 +292,46 @@
    </property>
    <property name="text">
     <string>Save to File</string>
+   </property>
+  </action>
+  <action name="action20">
+   <property name="text">
+    <string> 20  ms</string>
+   </property>
+  </action>
+  <action name="action30">
+   <property name="text">
+    <string>40</string>
+   </property>
+  </action>
+  <action name="action40">
+   <property name="text">
+    <string> 40  ms</string>
+   </property>
+  </action>
+  <action name="action50">
+   <property name="text">
+    <string> 60  ms</string>
+   </property>
+  </action>
+  <action name="action60">
+   <property name="text">
+    <string> 80  ms</string>
+   </property>
+  </action>
+  <action name="action120">
+   <property name="text">
+    <string>100 ms</string>
+   </property>
+  </action>
+  <action name="action120_ms">
+   <property name="text">
+    <string>120 ms</string>
+   </property>
+  </action>
+  <action name="action140_ms">
+   <property name="text">
+    <string>140 ms</string>
    </property>
   </action>
  </widget>
