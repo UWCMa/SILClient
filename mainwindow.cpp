@@ -180,14 +180,14 @@ void MainWindow::on_actionSet_Run_period_triggered()
     QString text = QInputDialog::getText(0, "",
                                          "Run Period(ms):", QLineEdit::Normal,
                                           mRunPeriod, &ok);
-    if(!ok)
+    if(!ok || text.isEmpty())
         return;
     if(20 > text.toInt() || 200 < text.toInt())
     {
         QString msg("The running period should be in the range(20 - 200)");
         warningMessage(msg);
     }
-    else if(!text.isEmpty())
+    else
     {
         this->ui->labelPeriodValue->setText(text);
         mRunPeriod = text;
