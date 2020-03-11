@@ -32,9 +32,6 @@ private:
 
 private slots:
 
-    void on_Run_clicked();
-
-
     void on_btnRun_clicked();
 
     void on_btnShutdown_clicked();

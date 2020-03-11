@@ -31,28 +31,31 @@ void TracesArea::outputMessage(QtMsgType type, const QMessageLogContext &context
  }*/
 
     QByteArray localMsg = msg.toLocal8Bit();
-    const char *file = context.file ? context.file : "";
-    const char *function = context.function ? context.function : "";
+    //const char *file = context.file ? context.file : "";
+    //const char *function = context.function ? context.function : "";
     QString str = msg;
-    str.append(" ");
-    str.append(function);
+    //str.append(" ");
+    //str.append(function);
     switch (type) {
     case QtDebugMsg:
-        //fprintf(stderr, "Debug: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
-        append(tr("— INFO: %1").arg(str));
+       // fprintf(stderr, "Debug: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
+        append(tr("— DDEBUG: %1").arg(str));
         break;
     case QtInfoMsg:
-        fprintf(stderr, "Info: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
+        //fprintf(stderr, "Info: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
+        append(tr("— INFO: %1").arg(str));
         break;
     case QtWarningMsg:
-        fprintf(stderr, "Warning: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
-        break;
-    case QtCriticalMsg:
-        fprintf(stderr, "Critical: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
+        //fprintf(stderr, "Warning: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
         append(tr("— WARNING: %1").arg(str));
         break;
+    case QtCriticalMsg:
+        //fprintf(stderr, "Critical: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
+        append(tr("— CRITICAL: %1").arg(str));
+        break;
     case QtFatalMsg:
-        fprintf(stderr, "Fatal: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
+        //fprintf(stderr, "Fatal: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
+        append(tr("— FATAL: %1").arg(str));
         break;
     }
 }

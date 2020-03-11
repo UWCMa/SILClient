@@ -65,14 +65,14 @@ MainWindow::MainWindow(QWidget *parent)
         QString output =mProcess->readAllStandardOutput();
         QMessageLogContext context;
         this->ui->tracesArea->outputMessage(QtDebugMsg, context, output);
-        qDebug() << "output: "<< output;
+        //qDebug() << "output: "<< output;
     });
 
     connect(mProcess, &QProcess::readyReadStandardError, [this](){
         QString err = mProcess->readAllStandardError();
         QMessageLogContext context;
         this->ui->tracesArea->outputMessage(QtCriticalMsg, context, err);
-        qDebug() << "error: "<<err;
+       // qDebug() << "error: "<<err;
     });
 
     QPixmap picClear(":/icons/clear.png");
@@ -102,22 +102,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
     }
 }
 
-void MainWindow::on_Run_clicked()
-{
-
-
-    mMovieLoad.start();
-    QMessageLogContext context(__FILE__, __LINE__, __FUNCTION__, "QtWarningMsg");
-    this->ui->tracesArea->outputMessage(QtCriticalMsg, context, "Hello");
-
-    QString program = "C:/Users/skobz/source/repos/forqt/Debug/forqt.exe";
-    QStringList arguments;
-    //arguments << "-style" << "motif";
-    mProcess->start(program);
-
-}
-
-//////////////////////////////////////////
 void MainWindow::on_btnRun_clicked()
 {
     if(false == isRuning)
@@ -129,7 +113,7 @@ void MainWindow::on_btnRun_clicked()
                 return;
         }
 
-        QStringList arguments; // NOT used
+        QStringList arguments;
         arguments << mRunPeriod;
         mProcess->start(mBinaryPath, arguments);
         if(!isProcessRunning())
@@ -160,7 +144,7 @@ void MainWindow::on_btnShutdown_clicked()
 
         QMetaEnum metaEnum = QMetaEnum::fromType<eProcessCmd>();
         QString text = metaEnum.valueToKey(SIL_SHUTDOWN);
-        writeToStdin("shutdown");
+        writeToStdin(text);
     }
     mMovieShutdown.setFileName(QString( ":/icons/inactive.png" ));
     mMovieShutdown.start();
