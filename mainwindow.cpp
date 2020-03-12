@@ -9,6 +9,8 @@
 #include <QMetaEnum>
 #include <QLabel>
 
+#include <QThread>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -26,18 +28,24 @@ MainWindow::MainWindow(QWidget *parent)
     mMovieLoad.stop ();
 
     setLabelIcon(mUi->labelClear, ":/icons/clean_new.png"   );
-    setLabelIcon(mUi->Shutdown,   ":/icons/off_green.png");
+    setLabelIcon(mUi->Shutdown,   ":/icons/power_off_2.png");
     setLabelIcon(mUi->labelFrog,  ":/icons/frog.png"    );
+
+    //QThread* thread = new QThread;
+    //this->ui->tracesArea->moveToThread((thread));
+//    connect(thread, SIGNAL(started()), [](){
+//        qDebug() << "STARTED!!!";
+//    });
+//    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
 
     connect(mProcess, &QProcess::readyReadStandardOutput, [this](){
         QString output = mProcess->readAllStandardOutput();
-        QMessageLogContext context;
-        this->ui->tracesArea->outputMessage(QtDebugMsg, context, output);
+        this->ui->tracesArea->outputMessage(QtDebugMsg, QMessageLogContext(), output);
     });
     connect(mProcess, &QProcess::readyReadStandardError, [this](){
         QString err = mProcess->readAllStandardError();
-        QMessageLogContext context;
-        this->ui->tracesArea->outputMessage(QtCriticalMsg, context, err);
+        this->ui->tracesArea->outputMessage(QtCriticalMsg, QMessageLogContext(), err);
     });
 }
 
@@ -83,7 +91,7 @@ void MainWindow::on_btnRun_clicked()
             qDebug() << "Running!!!";
             this->ui->LoadAnimation->setMovie(&mMovieLoad);
             mMovieLoad.start();
-            setLabelIcon(this->ui->Shutdown, ":/icons/active.png");
+            setLabelIcon(this->ui->Shutdown, ":/icons/power_on.png");
             isRuning = true;
         }
     }
@@ -99,7 +107,7 @@ void MainWindow::on_btnShutdown_clicked()
         QString text = metaEnum.valueToKey(SIL_SHUTDOWN);
         writeToStdin(text);
     }
-    setLabelIcon(this->ui->Shutdown,   ":/icons/inactive.png");
+    setLabelIcon(this->ui->Shutdown,   ":/icons/power_off_2.png");
     mMovieLoad.stop();
     isRuning = false;
 }

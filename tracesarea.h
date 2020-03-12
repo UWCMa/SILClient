@@ -6,6 +6,7 @@
 class TracesArea : public QTextBrowser
 {
     Q_OBJECT
+
 public:
     explicit TracesArea(QWidget * = nullptr);
     void outputMessage(QtMsgType, const QMessageLogContext&

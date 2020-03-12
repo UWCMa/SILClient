@@ -35,5 +35,8 @@
         <file>icons/iconfinder_power-button_353434.png</file>
         <file>icons/stop.png</file>
         <file>icons/iconfinder_system-log-out_9466.png</file>
+        <file>icons/power_off.png</file>
+        <file>icons/power_on.png</file>
+        <file>icons/power_off_2.png</file>
     </qresource>
 </RCC>
