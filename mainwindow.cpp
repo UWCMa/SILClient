@@ -22,11 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
     auto mUi =  this->ui;
     mMovieLoad.setScaledSize(mUi->LoadAnimation->size());
     mUi->LoadAnimation->setMovie(&mMovieLoad);
-    //mMovieLoad.start();
-    //.stop ();
 
-   // setLabelIcon(mUi->labelClear, ":/icons/clean_new.png"   );
-   // setLabelIcon(mUi->Shutdown,   ":/icons/power_off_2.png");
     setLabelIcon(mUi->labelFrog,  ":/icons/frog.png"    );
 
     connect(mProcess, &QProcess::readyReadStandardOutput, [this](){
@@ -72,17 +68,16 @@ void MainWindow::on_btnRun_clicked()
         if(!isProcessRunning())
         {
             QString msg("The binary was not executed!");
+            if(!this->ui->LoadAnimation->isHidden())
+                this->ui->LoadAnimation->hide();
             mProcess->terminate();
-           // this->ui->LoadAnimation->clear();
             if(warningMessage(msg))
                 return;
         }
         else
         {
-            qDebug() << "Running!!!";
-            //this->ui->LoadAnimation->setMovie(&mMovieLoad);
             mMovieLoad.start();
-           // setLabelIcon(this->ui->Shutdown, ":/icons/power_on.png");
+            this->ui->btnClear->setDisabled(true);
             isRuning = true;
         }
     }
@@ -93,13 +88,11 @@ void MainWindow::on_btnShutdown_clicked()
 {
     if(true == isRuning && isProcessRunning())
     {
-        qDebug() << "Shutdown\n";
-
         QMetaEnum metaEnum = QMetaEnum::fromType<eProcessCmd>();
         QString text = metaEnum.valueToKey(SIL_SHUTDOWN);
         writeToStdin(text);
     }
-
+    this->ui->btnClear->setEnabled(true);
     mMovieLoad.setPaused(true);
     isRuning = false;
 }
@@ -110,14 +103,17 @@ void MainWindow::on_actionPath_to_a_binary_triggered()
                                          "Select binary file",
                                          "/home",
                                          "All files (*.*)");
+    if(isProcessRunning())
+        mProcess->kill();
     if(!mBinaryPath.isEmpty())
     {
         mMovieLoad.start();
         mMovieLoad.stop();
+        if(this->ui->LoadAnimation->isHidden())
+            this->ui->LoadAnimation->show();
     }
-    //stop process!!! TODO
-        //this->ui->LoadAnimation->hide();
-    //show
+    else
+        this->ui->LoadAnimation->hide();
 }
 
 bool MainWindow::warningMessage(const QString& msg)
@@ -147,7 +143,7 @@ void MainWindow::on_actionSet_Run_period_triggered()
     }
     else
     {
-        this->ui->labelPeriodValue->setText(text);
+        this->ui->labelPeriodValue->setText(text + " ms");
         mRunPeriod = text;
     }
 }

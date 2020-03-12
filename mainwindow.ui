@@ -6,12 +6,25 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>828</width>
-    <height>599</height>
+    <width>797</width>
+    <height>640</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>SILClientDL</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="Resources.qrc">
+    <normaloff>:/icons/small_screen.png</normaloff>:/icons/small_screen.png</iconset>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>16</width>
+    <height>16</height>
+   </size>
+  </property>
+  <property name="unifiedTitleAndToolBarOnMac">
+   <bool>false</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -331,8 +344,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>828</width>
-     <height>21</height>
+     <width>797</width>
+     <height>25</height>
     </rect>
    </property>
    <property name="defaultUp">
@@ -341,10 +354,10 @@
    <widget class="QMenu" name="menuSettings">
     <property name="geometry">
      <rect>
-      <x>2265</x>
-      <y>100</y>
-      <width>180</width>
-      <height>119</height>
+      <x>345</x>
+      <y>115</y>
+      <width>209</width>
+      <height>144</height>
      </rect>
     </property>
     <property name="cursor">
@@ -355,10 +368,6 @@
     </property>
     <property name="title">
      <string>Settings</string>
-    </property>
-    <property name="icon">
-     <iconset resource="Resources.qrc">
-      <normaloff>:/icons/main_settings.png</normaloff>:/icons/main_settings.png</iconset>
     </property>
     <property name="separatorsCollapsible">
      <bool>false</bool>
