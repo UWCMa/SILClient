@@ -39,7 +39,7 @@ void TracesArea::outputMessage(QtMsgType type, const QMessageLogContext &context
     }
 }
 
-void TracesArea::saveLogsToFileSstem()
+void TracesArea::saveLogsToFileSytem()
 {
     QString saveFileName = QFileDialog::getSaveFileName(
                            this,

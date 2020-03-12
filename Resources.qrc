@@ -19,5 +19,21 @@
         <file>icons/save.png</file>
         <file>icons/repeat.png</file>
         <file>icons/frog.png</file>
+        <file>icons/iconfinder_059_CircledOff_183188.png</file>
+        <file>icons/lamp.png</file>
+        <file>icons/iconfinder_bulb_on_62165.png</file>
+        <file>icons/iconfinder_Close_Switch_Off_Power_Switcher_Button_1654359.png</file>
+        <file>icons/iconfinder_edit-clear_29769.png</file>
+        <file>icons/iconfinder_gear_62213.png</file>
+        <file>icons/clean_new_small.png</file>
+        <file>icons/clean_new.png</file>
+        <file>icons/iconfinder_on_off_1216568.png</file>
+        <file>icons/iconfinder_POWER - STANDBY_16948.png</file>
+        <file>icons/off_yellow.png</file>
+        <file>icons/iconfinder_power_49945.png</file>
+        <file>icons/off_green.png</file>
+        <file>icons/iconfinder_power-button_353434.png</file>
+        <file>icons/stop.png</file>
+        <file>icons/iconfinder_system-log-out_9466.png</file>
     </qresource>
 </RCC>

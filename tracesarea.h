@@ -10,6 +10,6 @@ public:
     explicit TracesArea(QWidget * = nullptr);
     void outputMessage(QtMsgType, const QMessageLogContext&
                                 , const QString &);
-    void saveLogsToFileSstem();
+    void saveLogsToFileSytem();
 };
 #endif // TRACESAREA_H

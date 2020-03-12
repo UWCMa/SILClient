@@ -1,89 +1,44 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QMovie>
+#include <QProcess>
 #include "tracesarea.h"
 #include <QDebug>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QMetaEnum>
-
-void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
-  {
-      QByteArray localMsg = msg.toLocal8Bit();
-      const char *file = context.file ? context.file : "";
-      const char *function = context.function ? context.function : "";
-      switch (type) {
-      case QtDebugMsg:
-          fprintf(stderr, "Debug: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
-          break;
-      case QtInfoMsg:
-          fprintf(stderr, "Info: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
-          break;
-      case QtWarningMsg:
-          fprintf(stderr, "Warning: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
-          break;
-      case QtCriticalMsg:
-          fprintf(stderr, "Critical: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
-          break;
-      case QtFatalMsg:
-          fprintf(stderr, "Fatal: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
-          break;
-
-          ////////////////////
-
-      }
-  }
+#include <QLabel>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , mMovieLoad    (QString( ":/icons/ajax-loader.gif"))
-    , mMovieInitS   (QString( ":/icons/success.png"    ))
-    , mMovieShutdown(QString( ":/icons/inactive.png" ))
+    , mMovieLoad(QString( ":/icons/ajax-loader.gif"))
     , mProcess(new QProcess(parent))
     , mBinaryPath("")
     , mRunPeriod("40")
     , isRuning(false)
 {
     ui->setupUi(this);
+    auto mUi =  this->ui;
+    mMovieLoad.setScaledSize(mUi->LoadAnimation->size());
+    mUi->LoadAnimation->setMovie(&mMovieLoad);
+    mMovieLoad.start();
+    mMovieLoad.stop ();
 
-    //QLabel
-    mMovieLoad.setScaledSize    (this->ui->LoadAnimation->size());
-    mMovieInitS.setScaledSize   (this->ui->LoadAnimation->size());
-    mMovieShutdown.setScaledSize(this->ui->LoadAnimation->size());
-
-    this->ui->LoadAnimation->setMovie(&mMovieLoad);
-    this->ui->Shutdown->setMovie     (&mMovieShutdown);
-
-    mMovieLoad.start(); // REDID just to see picture
-    mMovieLoad.stop();
-    mMovieShutdown.start();
-    mMovieShutdown.stop();
+    setLabelIcon(mUi->labelClear, ":/icons/clean_new.png"   );
+    setLabelIcon(mUi->Shutdown,   ":/icons/off_green.png");
+    setLabelIcon(mUi->labelFrog,  ":/icons/frog.png"    );
 
     connect(mProcess, &QProcess::readyReadStandardOutput, [this](){
-        QString output =mProcess->readAllStandardOutput();
+        QString output = mProcess->readAllStandardOutput();
         QMessageLogContext context;
         this->ui->tracesArea->outputMessage(QtDebugMsg, context, output);
-        //qDebug() << "output: "<< output;
     });
-
     connect(mProcess, &QProcess::readyReadStandardError, [this](){
         QString err = mProcess->readAllStandardError();
         QMessageLogContext context;
         this->ui->tracesArea->outputMessage(QtCriticalMsg, context, err);
-       // qDebug() << "error: "<<err;
     });
-
-    QPixmap picClear(":/icons/clear.png");
-    this->ui->labelClear->setPixmap(picClear);
-    this->ui->labelClear->setScaledContents(true);
-    this->ui->labelClear->show();
-
-    QPixmap picFrog(":/icons/frog.png");
-    this->ui->labelFrog->setPixmap(picFrog);
-    this->ui->labelFrog->setScaledContents(true);
-    this->ui->labelFrog->show();
 }
 
 MainWindow::~MainWindow()
@@ -93,13 +48,12 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
+void MainWindow::closeEvent(QCloseEvent* event)
 {
-    qDebug() << "Main window is closed";
     if(isProcessRunning())
     {
         mProcess->terminate();
-        mProcess->kill();
+        //mProcess->kill();
     }
 }
 
@@ -129,9 +83,7 @@ void MainWindow::on_btnRun_clicked()
             qDebug() << "Running!!!";
             this->ui->LoadAnimation->setMovie(&mMovieLoad);
             mMovieLoad.start();
-            mMovieShutdown.setFileName(QString( ":/icons/active.png" ));
-            mMovieShutdown.start();
-            mMovieShutdown.stop();
+            setLabelIcon(this->ui->Shutdown, ":/icons/active.png");
             isRuning = true;
         }
     }
@@ -147,9 +99,7 @@ void MainWindow::on_btnShutdown_clicked()
         QString text = metaEnum.valueToKey(SIL_SHUTDOWN);
         writeToStdin(text);
     }
-    mMovieShutdown.setFileName(QString( ":/icons/inactive.png" ));
-    mMovieShutdown.start();
-    mMovieShutdown.stop();
+    setLabelIcon(this->ui->Shutdown,   ":/icons/inactive.png");
     mMovieLoad.stop();
     isRuning = false;
 }
@@ -213,12 +163,20 @@ void MainWindow::writeToStdin(const QString& text)
 bool MainWindow::isProcessRunning() const
 {
     return QProcess::NotRunning == mProcess->state()
-           ? false : true;
+            ? false : true;
+}
+
+void MainWindow::setLabelIcon(QLabel* label, const QString& path)
+{
+    QPixmap picture(path);
+    label->setPixmap(picture);
+    label->setScaledContents(true);
+    label->show();
 }
 
 void MainWindow::on_actionSave_to_File_triggered()
 {
-    this->ui->tracesArea->saveLogsToFileSstem();
+    this->ui->tracesArea->saveLogsToFileSytem();
 }
 
 void MainWindow::on_btnClear_clicked()
