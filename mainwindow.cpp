@@ -22,8 +22,8 @@ MainWindow::MainWindow(QWidget *parent)
     auto mUi =  this->ui;
     mMovieLoad.setScaledSize(mUi->LoadAnimation->size());
     mUi->LoadAnimation->setMovie(&mMovieLoad);
-    mMovieLoad.start();
-    mMovieLoad.stop ();
+    //mMovieLoad.start();
+    //.stop ();
 
    // setLabelIcon(mUi->labelClear, ":/icons/clean_new.png"   );
    // setLabelIcon(mUi->Shutdown,   ":/icons/power_off_2.png");
@@ -73,6 +73,7 @@ void MainWindow::on_btnRun_clicked()
         {
             QString msg("The binary was not executed!");
             mProcess->terminate();
+           // this->ui->LoadAnimation->clear();
             if(warningMessage(msg))
                 return;
         }
@@ -85,6 +86,7 @@ void MainWindow::on_btnRun_clicked()
             isRuning = true;
         }
     }
+    this->ui->LoadAnimation->show();
 }
 
 void MainWindow::on_btnShutdown_clicked()
@@ -97,8 +99,7 @@ void MainWindow::on_btnShutdown_clicked()
         QString text = metaEnum.valueToKey(SIL_SHUTDOWN);
         writeToStdin(text);
     }
-  //  setLabelIcon(this->ui->Shutdown, ":/icons/power_off_2.png");
-    //mMovieLoad.stop();
+
     mMovieLoad.setPaused(true);
     isRuning = false;
 }
@@ -109,6 +110,14 @@ void MainWindow::on_actionPath_to_a_binary_triggered()
                                          "Select binary file",
                                          "/home",
                                          "All files (*.*)");
+    if(!mBinaryPath.isEmpty())
+    {
+        mMovieLoad.start();
+        mMovieLoad.stop();
+    }
+    //stop process!!! TODO
+        //this->ui->LoadAnimation->hide();
+    //show
 }
 
 bool MainWindow::warningMessage(const QString& msg)
@@ -182,3 +191,12 @@ void MainWindow::on_btnClear_clicked()
     this->ui->tracesArea->clear();
 }
 
+
+void MainWindow::on_btnInfo_clicked()
+{
+    QMessageBox::StandardButton reply;
+    QString info("This app was developed to have the ability to test Data Logger."
+                 "If you are brave developer and open to this chalange you can "
+                 "choose a binary, set up a value of cycle and enjoy it");
+    reply = QMessageBox::information(this, "Info", info);
+}

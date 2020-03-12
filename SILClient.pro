@@ -40,4 +40,5 @@ RESOURCES += \
     Resources.qrc
 
 DISTFILES += \
+    icons/info.png \
     icons/period.png

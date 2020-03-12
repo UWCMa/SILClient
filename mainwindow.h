@@ -38,6 +38,8 @@ private slots:
     void on_actionSave_to_File_triggered();
     void on_btnClear_clicked();
 
+    void on_btnInfo_clicked();
+
 private:
     Ui::MainWindow *ui;
 

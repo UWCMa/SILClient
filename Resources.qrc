@@ -4,12 +4,8 @@
         <file>icons/checkmark-ok.gif</file>
         <file>icons/failed.png</file>
         <file>icons/off_1.png</file>
-        <file>icons/shutdown.png</file>
-        <file>icons/sleep_1.png</file>
-        <file>icons/sleep_2.png</file>
         <file>icons/spinning-arrows.gif</file>
         <file>icons/start.png</file>
-        <file>icons/success.png</file>
         <file>icons/stop_clock.png</file>
         <file>icons/active.png</file>
         <file>icons/inactive.png</file>
@@ -42,5 +38,6 @@
         <file>icons/play.png</file>
         <file>icons/clearr.png</file>
         <file>icons/run.png</file>
+        <file>icons/info.png</file>
     </qresource>
 </RCC>
