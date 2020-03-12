@@ -9,8 +9,6 @@
 #include <QMetaEnum>
 #include <QLabel>
 
-#include <QThread>
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -27,21 +25,13 @@ MainWindow::MainWindow(QWidget *parent)
     mMovieLoad.start();
     mMovieLoad.stop ();
 
-    setLabelIcon(mUi->labelClear, ":/icons/clean_new.png"   );
-    setLabelIcon(mUi->Shutdown,   ":/icons/power_off_2.png");
+   // setLabelIcon(mUi->labelClear, ":/icons/clean_new.png"   );
+   // setLabelIcon(mUi->Shutdown,   ":/icons/power_off_2.png");
     setLabelIcon(mUi->labelFrog,  ":/icons/frog.png"    );
-
-    //QThread* thread = new QThread;
-    //this->ui->tracesArea->moveToThread((thread));
-//    connect(thread, SIGNAL(started()), [](){
-//        qDebug() << "STARTED!!!";
-//    });
-//    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-
 
     connect(mProcess, &QProcess::readyReadStandardOutput, [this](){
         QString output = mProcess->readAllStandardOutput();
-        this->ui->tracesArea->outputMessage(QtDebugMsg, QMessageLogContext(), output);
+        this->ui->tracesArea->outputMessage(QtInfoMsg, QMessageLogContext(), output);
     });
     connect(mProcess, &QProcess::readyReadStandardError, [this](){
         QString err = mProcess->readAllStandardError();
@@ -58,10 +48,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent* event)
 {
+    static_cast<void>(event);
     if(isProcessRunning())
     {
         mProcess->terminate();
-        //mProcess->kill();
     }
 }
 
@@ -89,9 +79,9 @@ void MainWindow::on_btnRun_clicked()
         else
         {
             qDebug() << "Running!!!";
-            this->ui->LoadAnimation->setMovie(&mMovieLoad);
+            //this->ui->LoadAnimation->setMovie(&mMovieLoad);
             mMovieLoad.start();
-            setLabelIcon(this->ui->Shutdown, ":/icons/power_on.png");
+           // setLabelIcon(this->ui->Shutdown, ":/icons/power_on.png");
             isRuning = true;
         }
     }
@@ -107,8 +97,9 @@ void MainWindow::on_btnShutdown_clicked()
         QString text = metaEnum.valueToKey(SIL_SHUTDOWN);
         writeToStdin(text);
     }
-    setLabelIcon(this->ui->Shutdown,   ":/icons/power_off_2.png");
-    mMovieLoad.stop();
+  //  setLabelIcon(this->ui->Shutdown, ":/icons/power_off_2.png");
+    //mMovieLoad.stop();
+    mMovieLoad.setPaused(true);
     isRuning = false;
 }
 
@@ -164,7 +155,6 @@ void MainWindow::writeToStdin(const QString& text)
         mProcess->closeWriteChannel();
         qDebug() << "bytes = " << bytes;
         qDebug() << "text = " << text;
-        qDebug() << "state: " << mProcess->state();
     }
 }
 

@@ -1,40 +1,40 @@
 #include "tracesarea.h"
-#include <QMetaType>
 #include "logbrowserdialog.h"
-#include <QSizePolicy>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QTextStream>
 
 TracesArea::TracesArea(QWidget *parent)
-    : QTextBrowser(parent)
+    : QPlainTextEdit(parent)
 {
+    setReadOnly(true);
 }
 
 void TracesArea::outputMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
-    QByteArray localMsg = msg.toLocal8Bit();
-    QString str = msg;
+    static_cast<void>(context);
     switch (type) {
     case QtDebugMsg:
        // fprintf(stderr, "Debug: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
-        append(tr("— DDEBUG: %1").arg(str));
+        appendPlainText(tr("— DDEBUG: %1").arg(msg));
         break;
     case QtInfoMsg:
         //fprintf(stderr, "Info: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
-        append(tr("— INFO: %1").arg(str));
+        appendPlainText(tr("— INFO: %1").arg(msg));
         break;
     case QtWarningMsg:
         //fprintf(stderr, "Warning: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
-        append(tr("— WARNING: %1").arg(str));
+        appendPlainText(tr("— WARNING: %1").arg(msg));
         break;
     case QtCriticalMsg:
         //fprintf(stderr, "Critical: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
-        append(tr("— CRITICAL: %1").arg(str));
+        appendPlainText(tr("— CRITICAL: %1").arg(msg));
         break;
     case QtFatalMsg:
         //fprintf(stderr, "Fatal: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
-        append(tr("— FATAL: %1").arg(str));
+        appendPlainText(tr("— FATAL: %1").arg(msg));
+        break;
+    default:
         break;
     }
 }

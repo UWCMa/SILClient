@@ -38,5 +38,9 @@
         <file>icons/power_off.png</file>
         <file>icons/power_on.png</file>
         <file>icons/power_off_2.png</file>
+        <file>icons/main_settings.png</file>
+        <file>icons/play.png</file>
+        <file>icons/clearr.png</file>
+        <file>icons/run.png</file>
     </qresource>
 </RCC>

@@ -18,7 +18,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     logbrowser.cpp \
     logbrowserdialog.cpp \
-    logger.cpp \
     main.cpp \
     mainwindow.cpp \
     tracesarea.cpp
@@ -26,7 +25,6 @@ SOURCES += \
 HEADERS += \
     logbrowser.h \
     logbrowserdialog.h \
-    logger.h \
     mainwindow.h \
     tracesarea.h
 
