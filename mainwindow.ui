@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="Resources.qrc">
-    <normaloff>:/icons/small_screen.png</normaloff>:/icons/small_screen.png</iconset>
+    <normaloff>:/icons/logo.png</normaloff>:/icons/logo.png</iconset>
   </property>
   <property name="iconSize">
    <size>
@@ -345,7 +345,7 @@
      <x>0</x>
      <y>0</y>
      <width>797</width>
-     <height>25</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="defaultUp">
@@ -354,10 +354,10 @@
    <widget class="QMenu" name="menuSettings">
     <property name="geometry">
      <rect>
-      <x>345</x>
-      <y>115</y>
-      <width>209</width>
-      <height>144</height>
+      <x>2265</x>
+      <y>99</y>
+      <width>180</width>
+      <height>115</height>
      </rect>
     </property>
     <property name="cursor">
@@ -374,9 +374,7 @@
     </property>
     <addaction name="actionPath_to_a_binary"/>
     <addaction name="actionSet_Run_period"/>
-    <addaction name="separator"/>
     <addaction name="actionSave_to_File"/>
-    <addaction name="separator"/>
    </widget>
    <addaction name="menuSettings"/>
   </widget>

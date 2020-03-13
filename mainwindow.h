@@ -29,6 +29,7 @@ private:
     void writeToStdin(const QString &text);
     bool isProcessRunning() const;
     void setLabelIcon(QLabel *label, const QString& path);
+    void setEnabledBtn(bool);
 
 private slots:
     void on_btnRun_clicked();

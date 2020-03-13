@@ -1,7 +1,4 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include <QProcess>
-#include "tracesarea.h"
 #include <QDebug>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -9,36 +6,38 @@
 #include <QMetaEnum>
 #include <QLabel>
 
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include "tracesarea.h"
+
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
-    , mMovieLoad(QString( ":/icons/ajax-loader.gif"))
-    , mProcess(new QProcess(parent))
-    , mBinaryPath("")
-    , mRunPeriod("40")
-    , isRuning(false)
+    : QMainWindow (parent)
+    , ui          (new Ui::MainWindow)
+    , mMovieLoad  (QString( ":/icons/loader.gif"))
+    , mProcess    (new QProcess(parent))
+    , mBinaryPath ("")
+    , mRunPeriod  ("40")
+    , isRuning    (false)
 {
     ui->setupUi(this);
-    auto mUi =  this->ui;
-    mMovieLoad.setScaledSize(mUi->LoadAnimation->size());
-    mUi->LoadAnimation->setMovie(&mMovieLoad);
-
-    setLabelIcon(mUi->labelFrog,  ":/icons/frog.png"    );
+    mMovieLoad.setScaledSize(this->ui->LoadAnimation->size());
+    this->ui->LoadAnimation->setMovie(&mMovieLoad);
+    setLabelIcon(this->ui->labelFrog, ":/icons/frog.png");
 
     connect(mProcess, &QProcess::readyReadStandardOutput, [this](){
-        QString output = mProcess->readAllStandardOutput();
-        this->ui->tracesArea->outputMessage(QtInfoMsg, QMessageLogContext(), output);
+        this->ui->tracesArea->outputMessage(QtInfoMsg, QMessageLogContext()
+                                       , mProcess->readAllStandardOutput());
     });
     connect(mProcess, &QProcess::readyReadStandardError, [this](){
-        QString err = mProcess->readAllStandardError();
-        this->ui->tracesArea->outputMessage(QtCriticalMsg, QMessageLogContext(), err);
+        this->ui->tracesArea->outputMessage(QtCriticalMsg, QMessageLogContext()
+                                            , mProcess->readAllStandardError());
+        if(QMovie::MovieState::Running == mMovieLoad.state())mMovieLoad.setPaused(true);
+        setEnabledBtn(true);
     });
 }
 
 MainWindow::~MainWindow()
 {
-    if(isProcessRunning())
-        mProcess->kill();
     delete ui;
 }
 
@@ -46,18 +45,16 @@ void MainWindow::closeEvent(QCloseEvent* event)
 {
     static_cast<void>(event);
     if(isProcessRunning())
-    {
-        mProcess->terminate();
-    }
+       mProcess->kill();
 }
 
 void MainWindow::on_btnRun_clicked()
 {
-    if(false == isRuning)
+    if(false == isProcessRunning())
     {
         if(mBinaryPath.isEmpty())
         {
-            QString msg("The binary path is missed");
+            QString msg("Path to the binary file is missed");
             if(warningMessage(msg))
                 return;
         }
@@ -67,7 +64,8 @@ void MainWindow::on_btnRun_clicked()
         mProcess->start(mBinaryPath, arguments);
         if(!isProcessRunning())
         {
-            QString msg("The binary was not executed!");
+            QString msg("Unable to start this file!");
+            this->ui->tracesArea->clear();
             if(!this->ui->LoadAnimation->isHidden())
                 this->ui->LoadAnimation->hide();
             mProcess->terminate();
@@ -77,8 +75,7 @@ void MainWindow::on_btnRun_clicked()
         else
         {
             mMovieLoad.start();
-            this->ui->btnClear->setDisabled(true);
-            isRuning = true;
+            setEnabledBtn(false);
         }
     }
     this->ui->LoadAnimation->show();
@@ -86,15 +83,14 @@ void MainWindow::on_btnRun_clicked()
 
 void MainWindow::on_btnShutdown_clicked()
 {
-    if(true == isRuning && isProcessRunning())
+    if(true == isProcessRunning())
     {
         QMetaEnum metaEnum = QMetaEnum::fromType<eProcessCmd>();
         QString text = metaEnum.valueToKey(SIL_SHUTDOWN);
         writeToStdin(text);
     }
-    this->ui->btnClear->setEnabled(true);
     mMovieLoad.setPaused(true);
-    isRuning = false;
+    setEnabledBtn(true);
 }
 
 void MainWindow::on_actionPath_to_a_binary_triggered()
@@ -104,7 +100,9 @@ void MainWindow::on_actionPath_to_a_binary_triggered()
                                          "/home",
                                          "All files (*.*)");
     if(isProcessRunning())
+    {
         mProcess->kill();
+    }
     if(!mBinaryPath.isEmpty())
     {
         mMovieLoad.start();
@@ -118,14 +116,8 @@ void MainWindow::on_actionPath_to_a_binary_triggered()
 
 bool MainWindow::warningMessage(const QString& msg)
 {
-    bool clicked = false;
-    qDebug() << "WARNING: " << msg;
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::warning(this, "WARNING", msg);
-    if (reply == QMessageBox::Ok) {
-        clicked = true;
-    }
-    return clicked;
+    return QMessageBox::Ok ==
+           QMessageBox::warning(this, "WARNING", msg);
 }
 
 void MainWindow::on_actionSet_Run_period_triggered()
@@ -175,6 +167,15 @@ void MainWindow::setLabelIcon(QLabel* label, const QString& path)
     label->setPixmap(picture);
     label->setScaledContents(true);
     label->show();
+}
+
+void MainWindow::setEnabledBtn(bool enabled)
+{
+    this->ui->btnRun->                setEnabled(enabled);
+    this->ui->btnClear->              setEnabled(enabled);
+    this->ui->actionPath_to_a_binary->setEnabled(enabled);
+    this->ui->actionSet_Run_period->  setEnabled(enabled);
+    this->ui->actionSave_to_File->    setEnabled(enabled);
 }
 
 void MainWindow::on_actionSave_to_File_triggered()
