@@ -16,15 +16,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    logbrowser.cpp \
-    logbrowserdialog.cpp \
     main.cpp \
     mainwindow.cpp \
     tracesarea.cpp
 
 HEADERS += \
-    logbrowser.h \
-    logbrowserdialog.h \
     mainwindow.h \
     tracesarea.h
 

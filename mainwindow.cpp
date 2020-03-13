@@ -5,6 +5,7 @@
 #include <QInputDialog>
 #include <QMetaEnum>
 #include <QLabel>
+#include <QMovie>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -13,39 +14,56 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow (parent)
     , ui          (new Ui::MainWindow)
-    , mMovieLoad  (QString( ":/icons/loader.gif"))
+    , mMovieLoad  (new QMovie(":/icons/loader.gif"))
     , mProcess    (new QProcess(parent))
     , mBinaryPath ("")
     , mRunPeriod  ("40")
     , isRuning    (false)
 {
     ui->setupUi(this);
-    mMovieLoad.setScaledSize(this->ui->LoadAnimation->size());
-    this->ui->LoadAnimation->setMovie(&mMovieLoad);
+    mMovieLoad->setScaledSize(this->ui->LoadAnimation->size());
+    this->ui->LoadAnimation->setMovie(mMovieLoad);
     setLabelIcon(this->ui->labelFrog, ":/icons/frog.png");
 
     connect(mProcess, &QProcess::readyReadStandardOutput, [this](){
-        this->ui->tracesArea->outputMessage(QtInfoMsg, QMessageLogContext()
-                                       , mProcess->readAllStandardOutput());
+        this->ui->tracesArea->outputMessage(QtInfoMsg, QMessageLogContext(),
+                                            mProcess->readAllStandardOutput());
     });
     connect(mProcess, &QProcess::readyReadStandardError, [this](){
-        this->ui->tracesArea->outputMessage(QtCriticalMsg, QMessageLogContext()
-                                            , mProcess->readAllStandardError());
-        if(QMovie::MovieState::Running == mMovieLoad.state())mMovieLoad.setPaused(true);
+        this->ui->tracesArea->outputMessage(QtCriticalMsg, QMessageLogContext(),
+                                            mProcess->readAllStandardError());
+        if(QMovie::MovieState::Running == mMovieLoad->state())
+        {
+            mMovieLoad->setPaused(true);
+            if(!this->ui->LoadAnimation->isHidden())
+                this->ui->LoadAnimation->hide();
+        }
         setEnabledBtn(true);
     });
 }
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+    if(nullptr != mMovieLoad) delete mMovieLoad;
+    if(nullptr != mProcess)   delete mProcess;
+    if(nullptr != ui)         delete ui;
 }
 
 void MainWindow::closeEvent(QCloseEvent* event)
 {
-    static_cast<void>(event);
-    if(isProcessRunning())
-       mProcess->kill();
+    QMessageBox::StandardButton answer = QMessageBox::question(
+    this,
+    tr("Close SILClientDL?"),
+    tr("Do you really want to close the SILClientDL?"),
+    QMessageBox::Yes | QMessageBox::No);
+    if (answer == QMessageBox::Yes)
+    {
+        event->accept();
+        if(isProcessRunning())
+           mProcess->kill();
+    }
+    else
+        event->ignore();
 }
 
 void MainWindow::on_btnRun_clicked()
@@ -58,7 +76,6 @@ void MainWindow::on_btnRun_clicked()
             if(warningMessage(msg))
                 return;
         }
-
         QStringList arguments;
         arguments << mRunPeriod;
         mProcess->start(mBinaryPath, arguments);
@@ -67,16 +84,15 @@ void MainWindow::on_btnRun_clicked()
             QString msg("Unable to start this file!");
             this->ui->tracesArea->clear();
             if(!this->ui->LoadAnimation->isHidden())
+            {
                 this->ui->LoadAnimation->hide();
+            }
             mProcess->terminate();
             if(warningMessage(msg))
                 return;
         }
-        else
-        {
-            mMovieLoad.start();
-            setEnabledBtn(false);
-        }
+        mMovieLoad->start();
+        setEnabledBtn(false);
     }
     this->ui->LoadAnimation->show();
 }
@@ -86,29 +102,24 @@ void MainWindow::on_btnShutdown_clicked()
     if(true == isProcessRunning())
     {
         QMetaEnum metaEnum = QMetaEnum::fromType<eProcessCmd>();
-        QString text = metaEnum.valueToKey(SIL_SHUTDOWN);
-        writeToStdin(text);
+        writeToStdin(metaEnum.valueToKey(SIL_SHUTDOWN));
     }
-    mMovieLoad.setPaused(true);
+    mMovieLoad->setPaused(true);
     setEnabledBtn(true);
 }
 
 void MainWindow::on_actionPath_to_a_binary_triggered()
 {
-    mBinaryPath = QFileDialog::getOpenFileName(this,
-                                         "Select binary file",
-                                         "/home",
-                                         "All files (*.*)");
-    if(isProcessRunning())
-    {
-        mProcess->kill();
-    }
+    mBinaryPath = QFileDialog::getOpenFileName(this,"Select "
+                         "file", "/home", "All files (*.*)");
     if(!mBinaryPath.isEmpty())
     {
-        mMovieLoad.start();
-        mMovieLoad.stop();
+        mMovieLoad->start();
+        mMovieLoad->stop();
         if(this->ui->LoadAnimation->isHidden())
+        {
             this->ui->LoadAnimation->show();
+        }
     }
     else
         this->ui->LoadAnimation->hide();
@@ -123,15 +134,14 @@ bool MainWindow::warningMessage(const QString& msg)
 void MainWindow::on_actionSet_Run_period_triggered()
 {
     bool ok = false;
-    QString text = QInputDialog::getText(0, "",
-                                         "Run Period(ms):", QLineEdit::Normal,
-                                          mRunPeriod, &ok);
+    QString text = QInputDialog::getText(0, "", "Run Period(ms):"
+                 , QLineEdit::Normal, mRunPeriod, &ok);
     if(!ok || text.isEmpty())
         return;
-    if(20 > text.toInt() || 200 < text.toInt())
+    if(minPeriod > text.toInt() || maxPeriod < text.toInt())
     {
-        QString msg("The running period should be in the range(20 - 200)");
-        warningMessage(msg);
+        static_cast<void>(warningMessage
+        ("The running period should be in the range(20 - 200)"));
     }
     else
     {
@@ -144,27 +154,23 @@ void MainWindow::writeToStdin(const QString& text)
 {
     if(isProcessRunning())
     {
-        qDebug() << "Sending Signal to process: " << text;
         QByteArray array = text.toLocal8Bit();
-        char* buffer = array.data();
-        qint64 bytes = mProcess->write(buffer);
-        mProcess->waitForBytesWritten();
+
+        static_cast<void>(mProcess->write(array.data()));
+        static_cast<void>(mProcess->waitForBytesWritten());
         mProcess->closeWriteChannel();
-        qDebug() << "bytes = " << bytes;
-        qDebug() << "text = " << text;
     }
 }
 
 bool MainWindow::isProcessRunning() const
 {
     return QProcess::NotRunning == mProcess->state()
-            ? false : true;
+           ? false : true;
 }
 
 void MainWindow::setLabelIcon(QLabel* label, const QString& path)
 {
-    QPixmap picture(path);
-    label->setPixmap(picture);
+    label->setPixmap(QPixmap(path));
     label->setScaledContents(true);
     label->show();
 }
@@ -188,12 +194,11 @@ void MainWindow::on_btnClear_clicked()
     this->ui->tracesArea->clear();
 }
 
-
 void MainWindow::on_btnInfo_clicked()
 {
-    QMessageBox::StandardButton reply;
-    QString info("This app was developed to have the ability to test Data Logger."
-                 "If you are brave developer and open to this chalange you can "
-                 "choose a binary, set up a value of cycle and enjoy it");
-    reply = QMessageBox::information(this, "Info", info);
+    QString info
+    ("This app was developed to have the ability to test Data Logger."
+     "If you are brave developer and open to this chalange you can "
+     "choose a binary, set up a value of cycle and enjoy it");
+    QMessageBox::information(this, "Info", info);
 }
