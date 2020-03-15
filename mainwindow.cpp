@@ -197,8 +197,18 @@ void MainWindow::on_btnClear_clicked()
 void MainWindow::on_btnInfo_clicked()
 {
     QString info
-    ("This app was developed to have the ability to test Data Logger."
-     "If you are brave developer and open to this chalange you can "
-     "choose a binary, set up a value of cycle and enjoy it");
+    ("This app is created to support your professional skills"
+     " to test Data logger(MW). First of all, choose the binary"
+     " of Data logger to 'Run'. Furthermore set the 'Cycle period'"
+     "( between 20 -255 ms). Over and above press 'Run'. "
+     "When you decide that you have enough logs to analyze just "
+     "press 'Shutdown'. This command has dependencies on the source"
+     " code of the Data logger(sil main cpp file). Please do not "
+     "change code in this file! If you add changes in this file you will have only"
+     " one way to stop running the cycle of the Data logger - kill process"
+     "(just close SILCliendDL: 'x'). Finally, you will be able to save"
+     " logs on your PC and open by any of your favorite text editors. "
+     "I hope this app will be useful for you and we will create a great"
+     " product together for our company.");
     QMessageBox::information(this, "Info", info);
 }
